@@ -60,101 +60,15 @@ type UserAction =
 
 const initialState: UserState = {
   name: 'Guest',
-  level: 7,
-  xp: 350,
-  totalXp: 2450,
-  points: 1250,
-  badges: [
-    { id: '1', name: 'First Quest', icon: '🏆', earned: true, earnedAt: new Date() },
-    { id: '2', name: 'Water Saver', icon: '💧', earned: true, earnedAt: new Date() },
-    { id: '3', name: 'Recycling Expert', icon: '♻️', earned: true, earnedAt: new Date() },
-    { id: '4', name: 'Tree Hugger', icon: '🌳', earned: true, earnedAt: new Date() },
-    { id: '5', name: 'Clean Energy', icon: '☀️', earned: true, earnedAt: new Date() },
-    { id: '6', name: 'Ocean Guardian', icon: '🌊', earned: false },
-  ],
-  quests: [
-    {
-      id: '1',
-      title: 'Ocean Cleanup Mission',
-      description: 'Learn about ocean pollution and design a cleanup strategy for your local beach or waterway.',
-      type: 'action',
-      icon: '🌊',
-      progress: 2,
-      maxProgress: 5,
-      xpReward: 150,
-      status: 'in-progress'
-    },
-    {
-      id: '2',
-      title: 'Renewable Energy Explorer',
-      description: 'Discover different types of renewable energy and calculate your home\'s potential for solar power.',
-      type: 'knowledge',
-      icon: '⚡',
-      progress: 0,
-      maxProgress: 4,
-      xpReward: 120,
-      status: 'not-started'
-    },
-    {
-      id: '3',
-      title: 'Plastic-Free Challenge',
-      description: 'Track your plastic usage for a week and find sustainable alternatives for single-use items.',
-      type: 'daily',
-      icon: '♻️',
-      progress: 6,
-      maxProgress: 7,
-      xpReward: 80,
-      status: 'in-progress'
-    }
-  ],
-  courses: [
-    {
-      id: '1',
-      title: 'Ocean Health Fundamentals',
-      description: 'Understand marine ecosystems, pollution sources, and conservation strategies.',
-      category: 'oceans',
-      difficulty: 'Beginner',
-      modules: 6,
-      weeks: 4,
-      xpReward: 300,
-      enrolled: false
-    },
-    {
-      id: '2',
-      title: 'Forest Biodiversity 101',
-      description: 'Explore forest biomes, species interdependence, and deforestation impacts.',
-      category: 'forests',
-      difficulty: 'Beginner',
-      modules: 8,
-      weeks: 6,
-      xpReward: 420,
-      enrolled: false
-    },
-    {
-      id: '3',
-      title: 'Renewable Energy Systems',
-      description: 'Dive into solar, wind, hydro, and emerging clean technologies.',
-      category: 'energy',
-      difficulty: 'Intermediate',
-      modules: 7,
-      weeks: 5,
-      xpReward: 380,
-      enrolled: false
-    },
-    {
-      id: '4',
-      title: 'Climate Change: Causes & Solutions',
-      description: 'Analyze climate drivers, mitigation strategies, and adaptation planning.',
-      category: 'climate',
-      difficulty: 'Advanced',
-      modules: 9,
-      weeks: 8,
-      xpReward: 520,
-      enrolled: false
-    }
-  ],
-  streak: 7,
-  rank: 247
+  level: 1,
+  xp: 0,
+  totalXp: 0,
+  points: 0,
+  badges: [],
+  quests: [],
+  courses: [],
+  streak: 0,
+  rank: 0
 };
 
 function userReducer(state: UserState, action: UserAction): UserState {
@@ -246,7 +160,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const savedData = localStorage.getItem(getUserKey());
       if (savedData) {
         const parsed = JSON.parse(savedData);
-        // Ensure we have all required fields with defaults
+
+        // If this is guest data and looks like old demo data, ignore it and start fresh.
+        if (!user) {
+          const looksLikeOldDemo =
+            parsed?.name === 'Alex' ||
+            (Array.isArray(parsed?.quests) && parsed.quests.some((q: any) => q?.id === '1')) ||
+            parsed?.level === 7 || parsed?.totalXp === 2450 || parsed?.points === 1250;
+          if (looksLikeOldDemo) {
+            return { ...initialState, name: 'Guest' };
+          }
+        }
+
+        // Ensure we have all required fields with defaults (fresh baseline + saved overrides)
         return {
           ...initialState,
           ...parsed,
