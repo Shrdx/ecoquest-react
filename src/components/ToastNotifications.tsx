@@ -62,7 +62,7 @@ function Toast({ notification, onClose }: { notification: NotificationData; onCl
                   +{notification.achievement.xpReward} XP
                 </span>
                 <span className="text-xs text-current/70">
-                  {notification.achievement.type.charAt(0).toUpperCase() + notification.achievement.type.slice(1)} Achievement
+                  {(notification.achievement.type || 'Special').charAt(0).toUpperCase() + (notification.achievement.type || 'Special').slice(1)} Achievement
                 </span>
               </div>
             )}
