@@ -44,7 +44,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         title: achievement.name || achievement.title || 'Achievement',
         description: achievement.description,
         icon: achievement.icon,
-        type: achievement.type || 'special',
+        type: (achievement.type as 'xp' | 'quest' | 'streak' | 'social' | 'special') || 'special',
         xpReward: xpGained || achievement.xpReward || 0,
         unlockedAt: new Date().toISOString()
       },
