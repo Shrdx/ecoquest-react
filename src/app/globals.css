@@ -19,8 +19,34 @@
   }
 }
 
+html, body { height: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
+}
+
+/* Background theme to avoid Tailwind arbitrary parsing issues */
+.eco-bg {
+  background: radial-gradient(1200px 600px at 70% -10%, rgba(34,211,238,0.08), transparent 50%),
+              radial-gradient(800px 400px at 0% 20%, rgba(52,211,153,0.08), transparent 50%),
+              #071b0f;
+}
+
+/********************
+ EcoQuest theme helpers
+*********************/
+.container-eco {
+  width: min(1100px, 92%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card-eco {
+  @apply bg-[#0e2a17] border border-white/10 rounded-xl shadow-lg;
+}
+
+.btn-primary-eco {
+  @apply inline-flex items-center gap-2 font-semibold rounded-xl text-[#08260f] bg-gradient-to-br from-emerald-400 to-green-600 px-4 py-2 shadow-lg;
+}
+.btn-secondary-eco {
+  @apply inline-flex items-center gap-2 font-semibold rounded-xl text-white/90 bg-white/10 px-4 py-2;
 }
