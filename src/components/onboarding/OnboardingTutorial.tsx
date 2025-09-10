@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNotification } from '@/contexts/NotificationContext';
 
 interface TutorialStep {

@@ -6,7 +6,7 @@ interface NotificationContextType {
   notifications: NotificationData[];
   addNotification: (notification: Omit<NotificationData, 'id'>) => void;
   removeNotification: (id: string) => void;
-  showAchievement: (achievement: any, xpGained?: number) => void;
+  showAchievement: (achievement: { id: string; name?: string; title?: string; description?: string; icon: string; type?: string; xpReward?: number }, xpGained?: number) => void;
   showSuccess: (message: string, title?: string) => void;
   showWarning: (message: string, title?: string) => void;
   showInfo: (message: string, title?: string) => void;
@@ -34,7 +34,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setNotifications(prev => prev.filter(n => n.id !== id));
   }, []);
 
-  const showAchievement = useCallback((achievement: any, xpGained = 0) => {
+  const showAchievement = useCallback((achievement: { id: string; name?: string; title?: string; description?: string; icon: string; type?: string; xpReward?: number }, xpGained = 0) => {
     addNotification({
       type: 'achievement',
       title: 'Achievement Unlocked!',

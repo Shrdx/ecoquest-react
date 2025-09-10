@@ -22,7 +22,7 @@ export default function LoginForm({ onToggleMode, onClose }: LoginFormProps) {
     try {
       await login(formData);
       onClose?.();
-    } catch (err) {
+    } catch {
       // Error is handled by context
     }
   };

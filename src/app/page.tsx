@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useAuth } from '@/contexts/AuthContext';

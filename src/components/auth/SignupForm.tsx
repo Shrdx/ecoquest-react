@@ -35,7 +35,7 @@ export default function SignupForm({ onToggleMode, onClose }: SignupFormProps) {
     try {
       await signup(formData);
       onClose?.();
-    } catch (err) {
+    } catch {
       // Error is handled by context
     }
   };

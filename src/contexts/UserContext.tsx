@@ -230,7 +230,7 @@ const UserContext = createContext<{
 } | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { showAchievement, showSuccess } = useNotification();
   
   // Load user-specific data based on authentication
@@ -271,7 +271,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
   
   // Enhanced dispatch with notifications
   const enhancedDispatch = (action: UserAction) => {
-    const oldState = state;
     dispatch(action);
     
     // Handle notifications based on actions
