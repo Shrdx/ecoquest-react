@@ -20,6 +20,10 @@ export const metadata: Metadata = {
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import { UserProvider } from "@/contexts/UserContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
+import ToastNotifications from "@/components/ToastNotifications";
+import OnboardingManager from "@/components/OnboardingManager";
 
 export default function RootLayout({
   children,
@@ -28,12 +32,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-<body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full eco-bg text-[#e7f5ef]`}>
-        <UserProvider>
-          <NavBar />
-          <main>{children}</main>
-          <Footer />
-        </UserProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full eco-bg text-[#e7f5ef]`}>
+        <AuthProvider>
+          <NotificationProvider>
+            <UserProvider>
+              <NavBar />
+              <main>{children}</main>
+              <Footer />
+              <ToastNotifications />
+              <OnboardingManager />
+            </UserProvider>
+          </NotificationProvider>
+        </AuthProvider>
       </body>
     </html>
   );

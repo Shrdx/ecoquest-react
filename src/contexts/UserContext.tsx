@@ -1,5 +1,7 @@
 'use client';
-import { createContext, useContext, useReducer, ReactNode } from 'react';
+import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { useNotification } from './NotificationContext';
 
 export interface Badge {
   id: string;
@@ -228,10 +230,100 @@ const UserContext = createContext<{
 } | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(userReducer, initialState);
+  const { user, isAuthenticated } = useAuth();
+  const { showAchievement, showSuccess } = useNotification();
+  
+  // Load user-specific data based on authentication
+  const getUserKey = () => user ? `ecoquest_user_data_${user.id}` : 'ecoquest_user_data_guest';
+  
+  const loadUserData = (): UserState => {
+    if (typeof window === 'undefined') return initialState;
+    
+    try {
+      const savedData = localStorage.getItem(getUserKey());
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        // Ensure we have all required fields with defaults
+        return {
+          ...initialState,
+          ...parsed,
+          name: user?.name || parsed.name || initialState.name
+        };
+      }
+    } catch (error) {
+      console.error('Failed to load user data:', error);
+    }
+    
+    return {
+      ...initialState,
+      name: user?.name || initialState.name
+    };
+  };
+  
+  const [state, dispatch] = useReducer(userReducer, loadUserData());
+  
+  // Save data whenever state changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(getUserKey(), JSON.stringify(state));
+    }
+  }, [state]);
+  
+  // Enhanced dispatch with notifications
+  const enhancedDispatch = (action: UserAction) => {
+    const oldState = state;
+    dispatch(action);
+    
+    // Handle notifications based on actions
+    switch (action.type) {
+      case 'ADD_XP':
+        if (action.payload >= 50) {
+          showSuccess(`Great job! +${action.payload} XP earned! 🌟`);
+        }
+        break;
+        
+      case 'EARN_BADGE':
+        const badge = state.badges.find(b => b.id === action.payload);
+        if (badge) {
+          showAchievement({
+            id: badge.id,
+            name: badge.name,
+            icon: badge.icon,
+            description: `You've earned the ${badge.name} badge!`,
+            type: 'special',
+            xpReward: 100
+          });
+        }
+        break;
+        
+      case 'COMPLETE_QUEST':
+        const quest = state.quests.find(q => q.id === action.payload);
+        if (quest) {
+          showAchievement({
+            id: quest.id,
+            name: quest.title,
+            icon: quest.icon,
+            description: 'Quest completed successfully!',
+            type: 'quest',
+            xpReward: quest.xpReward
+          });
+          
+          // Add XP for quest completion
+          dispatch({ type: 'ADD_XP', payload: quest.xpReward });
+        }
+        break;
+        
+      case 'ENROLL_COURSE':
+        const course = state.courses.find(c => c.id === action.payload);
+        if (course) {
+          showSuccess(`Successfully enrolled in ${course.title}! 📚`);
+        }
+        break;
+    }
+  };
   
   return (
-    <UserContext.Provider value={{ state, dispatch }}>
+    <UserContext.Provider value={{ state, dispatch: enhancedDispatch }}>
       {children}
     </UserContext.Provider>
   );

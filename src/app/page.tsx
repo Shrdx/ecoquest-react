@@ -1,13 +1,34 @@
 'use client';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNotification } from '@/contexts/NotificationContext';
+import AuthModal from '@/components/auth/AuthModal';
 
 export default function Home() {
   const { dispatch } = useUser();
+  const { isAuthenticated, user } = useAuth();
+  const { showSuccess } = useNotification();
+  const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
   const featuresRef = useRef<HTMLDivElement | null>(null);
 
-  const addPoints = (n: number) => dispatch({ type: 'ADD_POINTS', payload: n });
+  const addPoints = (n: number) => {
+    dispatch({ type: 'ADD_POINTS', payload: n });
+    showSuccess(`Great! You earned ${n} points! Keep exploring! 🌟`);
+  };
+
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      // Navigate to dashboard for authenticated users
+      window.location.href = '/dashboard';
+    } else {
+      // Show signup modal for new users
+      setAuthMode('signup');
+      setShowAuth(true);
+    }
+  };
 
   return (
     <div className="pb-12">
@@ -23,9 +44,9 @@ export default function Home() {
               while learning about environmental conservation.
             </p>
             <div className="mt-5 flex gap-3">
-              <Link href="/dashboard" className="btn-primary-eco">
-                <span>▶</span> Start Your Quest
-              </Link>
+              <button onClick={handleGetStarted} className="btn-primary-eco">
+                <span>▶</span> {isAuthenticated ? `Continue Quest, ${user?.name}` : 'Start Your Quest'}
+              </button>
               <button
                 className="btn-secondary-eco"
                 onClick={() => featuresRef.current?.scrollIntoView({ behavior: 'smooth' })}
@@ -201,11 +222,25 @@ export default function Home() {
         <div className="container-eco">
           <div className="card-eco p-6 text-center bg-gradient-to-br from-white/5 to-transparent">
             <h2 className="text-2xl font-bold">Ready to Save the Planet?</h2>
-            <p className="text-white/70 mt-1">Join thousands of eco-warriors in the ultimate environmental education adventure!</p>
-            <Link href="/dashboard" className="btn-primary-eco mt-4 inline-flex"><span>🚀</span> Join the Adventure</Link>
+            <p className="text-white/70 mt-1">
+              {isAuthenticated 
+                ? `Welcome back, ${user?.name}! Continue your environmental journey.`
+                : 'Join thousands of eco-warriors in the ultimate environmental education adventure!'
+              }
+            </p>
+            <button onClick={handleGetStarted} className="btn-primary-eco mt-4 inline-flex">
+              <span>🚀</span> {isAuthenticated ? 'Continue Adventure' : 'Join the Adventure'}
+            </button>
           </div>
         </div>
       </section>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuth} 
+        onClose={() => setShowAuth(false)} 
+        initialMode={authMode}
+      />
     </div>
   );
 }
