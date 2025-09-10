@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 
@@ -28,13 +29,21 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  // Use a portal so the modal is rendered at the document.body level.
+  // This prevents clipping by parent elements (like the sticky, blurred header).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const toggleMode = () => {
     setMode(mode === 'login' ? 'signup' : 'login');
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-y-auto">
       {/* Backdrop */}
       <div 
@@ -64,6 +73,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
