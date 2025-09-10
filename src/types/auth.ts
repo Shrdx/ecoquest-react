@@ -37,12 +37,12 @@ export interface EcoTheme {
 
 export interface Achievement {
   id: string;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   icon: string;
-  type: 'xp' | 'quest' | 'streak' | 'social' | 'special';
-  xpReward: number;
-  unlockedAt: string;
+  type?: 'xp' | 'quest' | 'streak' | 'social' | 'special';
+  xpReward?: number;
+  unlockedAt?: string;
 }
 
 export interface NotificationData {
