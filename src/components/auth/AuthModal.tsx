@@ -35,15 +35,18 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-y-auto">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
       
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-gradient-to-br from-slate-900/95 to-slate-800/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-md">
+      <div className="relative w-full max-w-md my-8 bg-gradient-to-br from-slate-900/98 to-slate-800/98 border border-white/20 rounded-2xl shadow-2xl backdrop-blur-lg">
+        {/* Decorative elements */}
+        <div className="absolute -top-1 -left-1 w-16 h-16 bg-emerald-400/10 rounded-full blur-xl" />
+        <div className="absolute -bottom-1 -right-1 w-20 h-20 bg-cyan-400/10 rounded-full blur-xl" />
         {/* Close button */}
         <button
           onClick={onClose}
@@ -60,10 +63,6 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
             <SignupForm onToggleMode={toggleMode} onClose={onClose} />
           )}
         </div>
-
-        {/* Decorative elements */}
-        <div className="absolute -top-1 -left-1 w-16 h-16 bg-emerald-400/10 rounded-full blur-xl" />
-        <div className="absolute -bottom-1 -right-1 w-20 h-20 bg-cyan-400/10 rounded-full blur-xl" />
       </div>
     </div>
   );

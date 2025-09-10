@@ -59,7 +59,7 @@ type UserAction =
   | { type: 'INIT_STATE'; payload: UserState };
 
 const initialState: UserState = {
-  name: 'Alex',
+  name: 'Guest',
   level: 7,
   xp: 350,
   totalXp: 2450,
