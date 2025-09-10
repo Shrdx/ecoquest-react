@@ -36,7 +36,7 @@ const tutorialSteps: TutorialStep[] = [
   {
     id: 'badges',
     title: 'Earn Badges & Achievements 🏅',
-    content: 'As you progress, you\\'ll unlock special badges that showcase your environmental knowledge and actions!',
+    content: 'As you progress, you\'ll unlock special badges that showcase your environmental knowledge and actions!',
     target: '.badge-section',
     position: 'left'
   },
@@ -64,8 +64,8 @@ const tutorialSteps: TutorialStep[] = [
   },
   {
     id: 'ready',
-    title: 'You\\'re All Set! 🚀',
-    content: 'Now you\\'re ready to start your eco-journey! Remember: every small action makes a big difference for our planet. Let\\'s save the world together!',
+    title: 'You\'re All Set! 🚀',
+    content: 'Now you\'re ready to start your eco-journey! Remember: every small action makes a big difference for our planet. Let\'s save the world together!',
     position: 'center'
   }
 ];
