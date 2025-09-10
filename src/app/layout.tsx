@@ -24,6 +24,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import ToastNotifications from "@/components/ToastNotifications";
 import OnboardingManager from "@/components/OnboardingManager";
+import DebugAuth from "@/components/DebugAuth";
 
 export default function RootLayout({
   children,
@@ -41,6 +42,7 @@ export default function RootLayout({
               <Footer />
               <ToastNotifications />
               <OnboardingManager />
+              <DebugAuth />
             </UserProvider>
           </NotificationProvider>
         </AuthProvider>

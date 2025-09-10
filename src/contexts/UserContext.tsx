@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { useNotification } from './NotificationContext';
 
@@ -55,7 +55,8 @@ type UserAction =
   | { type: 'PROGRESS_QUEST'; payload: { id: string; amount: number } }
   | { type: 'EARN_BADGE'; payload: string }
   | { type: 'ENROLL_COURSE'; payload: string }
-  | { type: 'START_QUEST'; payload: string };
+  | { type: 'START_QUEST'; payload: string }
+  | { type: 'INIT_STATE'; payload: UserState };
 
 const initialState: UserState = {
   name: 'Alex',
@@ -219,6 +220,8 @@ function userReducer(state: UserState, action: UserAction): UserState {
             : quest
         )
       };
+    case 'INIT_STATE':
+      return action.payload;
     default:
       return state;
   }
@@ -260,14 +263,24 @@ export function UserProvider({ children }: { children: ReactNode }) {
     };
   };
   
-  const [state, dispatch] = useReducer(userReducer, loadUserData());
+  const [state, dispatch] = useReducer(userReducer, initialState);
+  const [isInitialized, setIsInitialized] = useState(false);
   
-  // Save data whenever state changes
+  // Initialize user data when component mounts
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !isInitialized) {
+      const userData = loadUserData();
+      dispatch({ type: 'INIT_STATE', payload: userData });
+      setIsInitialized(true);
+    }
+  }, [user, isInitialized]);
+
+  // Save data whenever state changes (but not during initialization)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isInitialized) {
       localStorage.setItem(getUserKey(), JSON.stringify(state));
     }
-  }, [state]);
+  }, [state, isInitialized]);
   
   // Enhanced dispatch with notifications
   const enhancedDispatch = (action: UserAction) => {
