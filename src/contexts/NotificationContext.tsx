@@ -41,7 +41,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       message: achievement.description || `You earned the ${achievement.name} achievement!`,
       achievement: {
         id: achievement.id,
-        title: achievement.name || achievement.title,
+        title: achievement.name || achievement.title || 'Achievement',
         description: achievement.description,
         icon: achievement.icon,
         type: achievement.type || 'special',
