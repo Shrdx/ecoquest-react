@@ -165,7 +165,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         if (!user) {
           const looksLikeOldDemo =
             parsed?.name === 'Alex' ||
-            (Array.isArray(parsed?.quests) && parsed.quests.some((q: any) => q?.id === '1')) ||
             parsed?.level === 7 || parsed?.totalXp === 2450 || parsed?.points === 1250;
           if (looksLikeOldDemo) {
             return { ...initialState, name: 'Guest' };
