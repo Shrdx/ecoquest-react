@@ -16,7 +16,7 @@ const sampleGlobal: Row[] = [
 
 export default function LeaderboardPage() {
   const [tab, setTab] = useState<"Global" | "Friends" | "Local">("Global");
-  const rows = useMemo(() => sampleGlobal, [tab]);
+  const rows = useMemo(() => sampleGlobal, []);
 
   return (
     <div className="container-eco py-8">
@@ -26,7 +26,7 @@ export default function LeaderboardPage() {
         {["Global", "Friends", "Local"].map((t) => (
           <button
             key={t}
-            onClick={() => setTab(t as any)}
+            onClick={() => setTab(t as "Global" | "Friends" | "Local")}
             className={`px-3 py-1.5 rounded-lg border ${tab === t ? "bg-emerald-400 text-emerald-950 border-transparent" : "bg-white/10 border-white/15"}`}
           >
             {t}

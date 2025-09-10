@@ -22,7 +22,7 @@ export default function DashboardPage() {
       {/* Welcome */}
       <div className="bg-gradient-to-br from-cyan-300/15 to-emerald-400/15 border border-white/15 rounded-xl p-5">
         <h1 className="text-2xl font-bold">Welcome back, {state.name}! 🌱</h1>
-        <p className="text-white/70">You're making great progress on your environmental journey. Keep it up!</p>
+        <p className="text-white/70">You&apos;re making great progress on your environmental journey. Keep it up!</p>
         <div className="flex items-center gap-3 mt-3">
           <span className="px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 font-semibold">Level {state.level}</span>
           <div className="flex-1 h-2 bg-white/10 rounded">
