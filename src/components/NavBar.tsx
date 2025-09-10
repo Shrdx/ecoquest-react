@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthModal from './auth/AuthModal';
@@ -17,6 +17,25 @@ export default function NavBar() {
   const [showProfileCustomization, setShowProfileCustomization] = useState(false);
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;
+
+  // Listen for global auth open events from anywhere (e.g., Home page CTA)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handler = (e: Event) => {
+      try {
+        const detail = (e as CustomEvent<{ mode?: 'login' | 'signup' }>).detail || {};
+        const mode = detail.mode === 'signup' ? 'signup' : 'login';
+        setAuthMode(mode);
+        setShowAuth(true);
+      } catch {
+        setAuthMode('login');
+        setShowAuth(true);
+      }
+    };
+
+    window.addEventListener('ecoquest:open-auth', handler as EventListener);
+    return () => window.removeEventListener('ecoquest:open-auth', handler as EventListener);
+  }, []);
 
   const handleAuthClick = (mode: 'login' | 'signup') => {
     setAuthMode(mode);

@@ -3,14 +3,11 @@ import { useRef, useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotification } from '@/contexts/NotificationContext';
-import AuthModal from '@/components/auth/AuthModal';
 
 export default function Home() {
   const { dispatch } = useUser();
   const { isAuthenticated, user } = useAuth();
   const { showSuccess } = useNotification();
-  const [showAuth, setShowAuth] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
   const featuresRef = useRef<HTMLDivElement | null>(null);
 
   const addPoints = (n: number) => {
@@ -23,9 +20,10 @@ export default function Home() {
       // Navigate to dashboard for authenticated users
       window.location.href = '/dashboard';
     } else {
-      // Show signup modal for new users
-      setAuthMode('signup');
-      setShowAuth(true);
+      // Ask NavBar to open the global auth modal in signup mode
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('ecoquest:open-auth', { detail: { mode: 'signup' } }));
+      }
     }
   };
 
@@ -234,12 +232,6 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Auth Modal */}
-      <AuthModal 
-        isOpen={showAuth} 
-        onClose={() => setShowAuth(false)} 
-        initialMode={authMode}
-      />
     </div>
   );
 }
